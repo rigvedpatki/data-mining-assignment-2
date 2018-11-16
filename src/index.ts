@@ -7,6 +7,28 @@ console.time('data-mining-assignment-2');
 
 const DATA_PATH = path.resolve(__dirname, '../data/T10I4D100K.dat');
 
+const singleItemCountWithoutSupport = path.resolve(
+  __dirname,
+  '../output/single-item-count-without-support.txt'
+);
+
+const singleItemCountWithSupport = path.resolve(
+  __dirname,
+  '../output/single-item-count-with-support.txt'
+);
+
+const doubleItemCountWithoutSupport = path.resolve(
+  __dirname,
+  '../output/double-item-count-without-support.txt'
+);
+
+const doubleItemCountWithSupport = path.resolve(
+  __dirname,
+  '../output/double-item-count-with-support.txt'
+);
+
+const confidence = path.resolve(__dirname, '../output/confidense.txt');
+
 const data = fs.readFileSync(DATA_PATH, 'utf-8');
 
 const dataBaskets = data.split('\n');
@@ -32,7 +54,7 @@ for (let basket of baskets) {
 }
 
 fs.writeFileSync(
-  'single-item-count-without-support.txt',
+  singleItemCountWithoutSupport,
   JSON.stringify(singleItemCount, null, 2)
 );
 
@@ -43,7 +65,7 @@ for (let item in singleItemCount) {
 }
 
 fs.writeFileSync(
-  'single-item-count-with-support.txt',
+  singleItemCountWithSupport,
   JSON.stringify(singleItemCount, null, 2)
 );
 
@@ -69,7 +91,7 @@ for (let basket of baskets) {
   }
 }
 fs.writeFileSync(
-  'double-item-count-without-support.txt',
+  doubleItemCountWithoutSupport,
   JSON.stringify(doubleItemCount, null, 1)
 );
 
@@ -79,7 +101,21 @@ for (let itemPair in doubleItemCount) {
   }
 }
 fs.writeFileSync(
-  'double-item-count-with-support.txt',
+  doubleItemCountWithSupport,
   JSON.stringify(doubleItemCount, null, 1)
 );
+
+let confidenceString = '';
+// Confidence
+for (let doubleItem in doubleItemCount) {
+  let [itemA, itemB] = doubleItem.split(',');
+  let confItemAItemB = doubleItemCount[doubleItem] / singleItemCount[itemA];
+  let confItemBItemA = doubleItemCount[doubleItem] / singleItemCount[itemB];
+  confidenceString =
+    confidenceString +
+    `\nConfidence (${itemA} -> ${itemB}) = ${confItemAItemB} \nConfidence (${itemB} -> ${itemA}) = ${confItemBItemA}`;
+}
+
+fs.writeFileSync(confidence, confidenceString);
+
 console.timeEnd('data-mining-assignment-2');
