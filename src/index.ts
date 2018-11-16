@@ -18,65 +18,75 @@ import {
   // confidenceTriplePath
 } from './get-file-paths';
 
+import cluster from 'cluster';
+import os from 'os';
+
 console.time('data-mining-assignment-2');
 
-const data = fs.readFileSync(dataPath, 'utf-8');
+if (cluster.isMaster) {
+  const cpuCount = os.cpus().length;
+  for (var i = 0; i < cpuCount; i += 1) {
+    cluster.fork();
+  }
+} else {
+  const data = fs.readFileSync(dataPath, 'utf-8');
 
-const baskets = getBaskets(data);
+  const baskets = getBaskets(data);
 
-const singleItemCount = getSingleItemCount(baskets);
+  const singleItemCount = getSingleItemCount(baskets);
 
-fs.writeFileSync(
-  singleItemCountWithoutSupportPath,
-  JSON.stringify(singleItemCount, null, 2)
-);
+  fs.writeFileSync(
+    singleItemCountWithoutSupportPath,
+    JSON.stringify(singleItemCount, null, 2)
+  );
 
-const singleItemCountWithSupport = getItemCountWithSupport(singleItemCount);
+  const singleItemCountWithSupport = getItemCountWithSupport(singleItemCount);
 
-fs.writeFileSync(
-  singleItemCountWithSupportPath,
-  JSON.stringify(singleItemCountWithSupport, null, 2)
-);
+  fs.writeFileSync(
+    singleItemCountWithSupportPath,
+    JSON.stringify(singleItemCountWithSupport, null, 2)
+  );
 
-const doubleItemCount = getDoubleItemCount(baskets, singleItemCount);
+  const doubleItemCount = getDoubleItemCount(baskets, singleItemCount);
 
-fs.writeFileSync(
-  doubleItemCountWithoutSupportPath,
-  JSON.stringify(doubleItemCount, null, 2)
-);
+  fs.writeFileSync(
+    doubleItemCountWithoutSupportPath,
+    JSON.stringify(doubleItemCount, null, 2)
+  );
 
-const doubleItemCountWithSupport = getItemCountWithSupport(doubleItemCount);
+  const doubleItemCountWithSupport = getItemCountWithSupport(doubleItemCount);
 
-fs.writeFileSync(
-  doubleItemCountWithSupportPath,
-  JSON.stringify(doubleItemCountWithSupport, null, 2)
-);
+  fs.writeFileSync(
+    doubleItemCountWithSupportPath,
+    JSON.stringify(doubleItemCountWithSupport, null, 2)
+  );
 
-const doubleConfidence = getDoubleConfidence(
-  doubleItemCountWithSupport,
-  singleItemCountWithSupport
-);
+  const doubleConfidence = getDoubleConfidence(
+    doubleItemCountWithSupport,
+    singleItemCountWithSupport
+  );
 
-fs.writeFileSync(confidenceDoublePath, doubleConfidence);
+  fs.writeFileSync(confidenceDoublePath, doubleConfidence);
 
-// const tripleItemCount = getTripleItemCount(baskets, singleItemCount);
+  // const tripleItemCount = getTripleItemCount(baskets, singleItemCount);
 
-// fs.writeFileSync(
-//   tripleItemCountWithoutSupportPath,
-//   JSON.stringify(tripleItemCount, null, 2)
-// );
+  // fs.writeFileSync(
+  //   tripleItemCountWithoutSupportPath,
+  //   JSON.stringify(tripleItemCount, null, 2)
+  // );
 
-// const tripleItemCountWithSupport = getItemCountWithSupport(tripleItemCount);
+  // const tripleItemCountWithSupport = getItemCountWithSupport(tripleItemCount);
 
-// fs.writeFileSync(
-//   tripleItemCountWithSupportPath,
-//   JSON.stringify(tripleItemCountWithSupport, null, 2)
-// );
+  // fs.writeFileSync(
+  //   tripleItemCountWithSupportPath,
+  //   JSON.stringify(tripleItemCountWithSupport, null, 2)
+  // );
 
-// const tripleConfidence = getTripleConfidence(
-//   tripleItemCountWithSupport,
-//   singleItemCountWithSupport
-// );
-// fs.writeFileSync(confidenceTriplePath, tripleConfidence);
+  // const tripleConfidence = getTripleConfidence(
+  //   tripleItemCountWithSupport,
+  //   singleItemCountWithSupport
+  // );
+  // fs.writeFileSync(confidenceTriplePath, tripleConfidence);
+}
 
 console.timeEnd('data-mining-assignment-2');
