@@ -27,7 +27,24 @@ const doubleItemCountWithSupport = path.resolve(
   '../output/double-item-count-with-support.txt'
 );
 
-const confidence = path.resolve(__dirname, '../output/confidense.txt');
+const tripleItemCountWithoutSupport = path.resolve(
+  __dirname,
+  '../output/triple-item-count-without-support.txt'
+);
+
+const tripleItemCountWithSupport = path.resolve(
+  __dirname,
+  '../output/triple-item-count-with-support.txt'
+);
+
+const confidenceDouble = path.resolve(
+  __dirname,
+  '../output/confidenceDouble.txt'
+);
+const confidenccTriple = path.resolve(
+  __dirname,
+  '../output/confidenceTriple.txt'
+);
 
 const data = fs.readFileSync(DATA_PATH, 'utf-8');
 
@@ -105,17 +122,80 @@ fs.writeFileSync(
   JSON.stringify(doubleItemCount, null, 1)
 );
 
-let confidenceString = '';
+let confidenceDoubleString = '';
 // Confidence
 for (let doubleItem in doubleItemCount) {
   let [itemA, itemB] = doubleItem.split(',');
   let confItemAItemB = doubleItemCount[doubleItem] / singleItemCount[itemA];
   let confItemBItemA = doubleItemCount[doubleItem] / singleItemCount[itemB];
-  confidenceString =
-    confidenceString +
+  confidenceDoubleString =
+    confidenceDoubleString +
     `\nConfidence (${itemA} -> ${itemB}) = ${confItemAItemB} \nConfidence (${itemB} -> ${itemA}) = ${confItemBItemA}`;
 }
 
-fs.writeFileSync(confidence, confidenceString);
+fs.writeFileSync(confidenceDouble, confidenceDoubleString);
+
+let tripleItemCount: ItemCount = {};
+for (let basket of baskets) {
+  for (let itemA in singleItemCount) {
+    for (let itemB in singleItemCount) {
+      for (let itemC in singleItemCount) {
+        if (
+          itemA !== itemB &&
+          itemB !== itemC &&
+          parseInt(itemA) > parseInt(itemB) &&
+          parseInt(itemB) > parseInt(itemC)
+        ) {
+          if (
+            basket.data.includes(parseInt(itemA)) &&
+            basket.data.includes(parseInt(itemB)) &&
+            basket.data.includes(parseInt(itemC))
+          ) {
+            let concatItem = `${itemA},${itemB},${itemC}`;
+            if (concatItem in tripleItemCount) {
+              tripleItemCount[concatItem] = tripleItemCount[concatItem] + 1;
+            } else {
+              tripleItemCount[concatItem] = 1;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+fs.writeFileSync(
+  tripleItemCountWithoutSupport,
+  JSON.stringify(tripleItemCount, null, 1)
+);
+
+for (let tripleItem in tripleItemCount) {
+  if (tripleItemCount[tripleItem] < config.SUPPORT) {
+    delete tripleItemCount[tripleItem];
+  }
+}
+
+fs.writeFileSync(
+  tripleItemCountWithSupport,
+  JSON.stringify(tripleItemCount, null, 1)
+);
+
+let confidenceTripleString = '';
+// Confidence
+for (let tripleItem in tripleItemCount) {
+  let [itemA, itemB, itemC] = tripleItem.split(',');
+  let confABToC =
+    tripleItemCount[`${itemA},${itemB},${itemC}`] / singleItemCount[`${itemC}`];
+  let confBCToA =
+    tripleItemCount[`${itemA},${itemB},${itemC}`] / singleItemCount[`${itemA}`];
+  let confCAToB =
+    tripleItemCount[`${itemA},${itemB},${itemC}`] / singleItemCount[`${itemB}`];
+
+  confidenceTripleString =
+    confidenceTripleString +
+    `\nConfidence (${itemA},${itemB} -> ${itemC}) = ${confABToC} \nConfidence (${itemB},${itemC} -> ${itemA}) = ${confBCToA} \nConfidence (${itemC},${itemA} -> ${itemB}) = ${confCAToB}`;
+}
+
+fs.writeFileSync(confidenccTriple, confidenceTripleString);
 
 console.timeEnd('data-mining-assignment-2');
