@@ -1,0 +1,29 @@
+{
+  "name": "data-mining-assignment-2",
+  "version": "1.0.0",
+  "description": "Discovery of Frequent Itemsets and Association Rules",
+  "main": "./build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./build/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rigvedpatki/data-mining-assignment-2.git"
+  },
+  "keywords": [
+    "data-mining",
+    "typescript"
+  ],
+  "author": "Rigved Patki <rigved.patki@gmail.com>",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/rigvedpatki/data-mining-assignment-2/issues"
+  },
+  "homepage": "https://github.com/rigvedpatki/data-mining-assignment-2#readme",
+  "devDependencies": {
+    "@types/node": "^10.12.5",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.6"
+  }
+}
