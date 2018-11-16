@@ -21,14 +21,22 @@ import {
 import cluster from 'cluster';
 import os from 'os';
 
-console.time('data-mining-assignment-2');
-
 if (cluster.isMaster) {
+  console.log(`Master ${process.pid} is running`);
   const cpuCount = os.cpus().length;
   for (var i = 0; i < cpuCount; i += 1) {
+    console.log(`Forking process number ${i}...`);
     cluster.fork();
   }
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`worker ${worker.process.pid} died`);
+  });
+  process.exit();
 } else {
+  console.time('data-mining-assignment-2');
+
+  console.log(`Worker ${process.pid} started and finished`);
+
   const data = fs.readFileSync(dataPath, 'utf-8');
 
   const baskets = getBaskets(data);
@@ -87,6 +95,6 @@ if (cluster.isMaster) {
   //   singleItemCountWithSupport
   // );
   // fs.writeFileSync(confidenceTriplePath, tripleConfidence);
+  process.exit();
+  console.timeEnd('data-mining-assignment-2');
 }
-
-console.timeEnd('data-mining-assignment-2');
