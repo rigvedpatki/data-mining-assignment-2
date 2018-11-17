@@ -1,4 +1,5 @@
 import { ItemCount } from './types';
+import config from './config';
 
 const getTripleConfidence = (
   tripleItemCount: ItemCount,
@@ -11,15 +12,27 @@ const getTripleConfidence = (
     let confABToC =
       tripleItemCount[`${itemA},${itemB},${itemC}`] /
       singleItemCount[`${itemC}`];
+    if (confABToC > config.CONFIDENCE) {
+      confidenceTripleString =
+        confidenceTripleString +
+        `\nConfidence (${itemA},${itemB} -> ${itemC}) = ${confABToC}`;
+    }
     let confBCToA =
-      tripleItemCount[`${itemA},${itemB},${itemC}`] /
+      tripleItemCount[`$${itemA},${itemB},${itemC}`] /
       singleItemCount[`${itemA}`];
+    if (confBCToA > config.CONFIDENCE) {
+      confidenceTripleString =
+        confidenceTripleString +
+        ` \nConfidence (${itemB},${itemC} -> ${itemA}) = ${confBCToA}`;
+    }
     let confCAToB =
       tripleItemCount[`${itemA},${itemB},${itemC}`] /
       singleItemCount[`${itemB}`];
-    confidenceTripleString =
-      confidenceTripleString +
-      `\nConfidence (${itemA},${itemB} -> ${itemC}) = ${confABToC} \nConfidence (${itemB},${itemC} -> ${itemA}) = ${confBCToA} \nConfidence (${itemC},${itemA} -> ${itemB}) = ${confCAToB}`;
+    if (confCAToB > config.CONFIDENCE) {
+      confidenceTripleString =
+        confidenceTripleString +
+        ` \nConfidence (${itemC},${itemA} -> ${itemB}) = ${confCAToB}`;
+    }
   }
   console.timeEnd('getTripleConfidence');
   return confidenceTripleString;

@@ -1,3 +1,4 @@
 export default {
-  SUPPORT: 1000
+  SUPPORT: 0.01,
+  CONFIDENCE: 0.5
 };

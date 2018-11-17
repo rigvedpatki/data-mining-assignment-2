@@ -1,4 +1,5 @@
 import { ItemCount } from './types';
+import config from './config';
 
 const getDoubleConfidence = (
   doubleItemCount: ItemCount,
@@ -10,10 +11,18 @@ const getDoubleConfidence = (
   for (let doubleItem in doubleItemCount) {
     let [itemA, itemB] = doubleItem.split(',');
     let confItemAItemB = doubleItemCount[doubleItem] / singleItemCount[itemA];
+    if (confItemAItemB > config.CONFIDENCE) {
+      confidenceDoubleString =
+        confidenceDoubleString +
+        `\nConfidence (${itemA} -> ${itemB}) = ${confItemAItemB} `;
+    }
+
     let confItemBItemA = doubleItemCount[doubleItem] / singleItemCount[itemB];
-    confidenceDoubleString =
-      confidenceDoubleString +
-      `\nConfidence (${itemA} -> ${itemB}) = ${confItemAItemB} \nConfidence (${itemB} -> ${itemA}) = ${confItemBItemA}`;
+    if (confItemBItemA > config.CONFIDENCE) {
+      confidenceDoubleString =
+        confidenceDoubleString +
+        ` \nConfidence (${itemB} -> ${itemA}) = ${confItemBItemA}`;
+    }
   }
   console.timeEnd('getDoubleConfidence');
   return confidenceDoubleString;
