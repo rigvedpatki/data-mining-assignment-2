@@ -84,7 +84,8 @@ fs.writeFileSync(
 
 const tripleConfidence = getTripleConfidence(
   tripleItemCountWithSupport,
-  singleItemCountWithSupport
+  singleItemCountWithSupport,
+  doubleItemCountWithSupport
 );
 fs.writeFileSync(confidenceTriplePath, tripleConfidence);
 
