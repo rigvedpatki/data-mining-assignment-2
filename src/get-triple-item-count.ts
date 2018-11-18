@@ -1,7 +1,7 @@
-import { ItemCount, Basket } from './types';
+import { ItemCount, Transaction } from './types';
 
 const getTripleItemCount = (
-  baskets: Basket[],
+  transactions: Transaction[],
   doubleItemCount: ItemCount
 ): ItemCount => {
   console.time('getTripleItemCount');
@@ -12,7 +12,7 @@ const getTripleItemCount = (
     itemList = itemList.concat(items);
   }
   itemList = Array.from(new Set(itemList));
-  for (let basket of baskets) {
+  for (let transaction of transactions) {
     for (let itemA of itemList) {
       for (let itemB of itemList) {
         for (let itemC of itemList) {
@@ -25,9 +25,9 @@ const getTripleItemCount = (
             itemA > itemC
           ) {
             if (
-              basket.items.includes(itemA) &&
-              basket.items.includes(itemB) &&
-              basket.items.includes(itemC)
+              transaction.items.includes(itemA) &&
+              transaction.items.includes(itemB) &&
+              transaction.items.includes(itemC)
             ) {
               let concatItem = `${itemA},${itemB},${itemC}`;
               if (concatItem in tripleItemCount) {

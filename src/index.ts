@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import getBaskets from './get-baskets';
+import getSalesTransactions from './get-sales-transactions';
 import getSingleItemCount from './get-single-item-count';
 import getDoubleItemCount from './get-double-item-count';
 import getItemCountWithSupport from './get-item-count-with-support';
@@ -22,7 +22,7 @@ console.time('data-mining-assignment-2');
 
 const data = fs.readFileSync(dataPath, 'utf-8');
 
-const baskets = getBaskets(data);
+const baskets = getSalesTransactions(data);
 
 const singleItemCount = getSingleItemCount(baskets);
 

@@ -1,18 +1,18 @@
-import { Basket, ItemCount } from './types';
+import { Transaction, ItemCount } from './types';
 
 const getDoubleItemCount = (
-  baskets: Basket[],
+  transactions: Transaction[],
   singleItemCount: ItemCount
 ): ItemCount => {
   console.time('getDoubleItemCount');
   const doubleItemCount: ItemCount = {};
-  for (let basket of baskets) {
+  for (let transaction of transactions) {
     for (let itemA in singleItemCount) {
       for (let itemB in singleItemCount) {
         if (itemA !== itemB && parseInt(itemA) > parseInt(itemB)) {
           if (
-            basket.items.includes(parseInt(itemA)) &&
-            basket.items.includes(parseInt(itemB))
+            transaction.items.includes(parseInt(itemA)) &&
+            transaction.items.includes(parseInt(itemB))
           ) {
             let concatItem = `${itemA},${itemB}`;
             if (concatItem in doubleItemCount) {

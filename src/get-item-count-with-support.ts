@@ -1,13 +1,13 @@
-import { ItemCount, Basket } from './types';
+import { ItemCount, Transaction } from './types';
 import config from './config';
 
 const getItemCountWithSupport = (
   itemCount: ItemCount,
-  baskets: Basket[]
+  transactions: Transaction[]
 ): ItemCount => {
   console.time('getItemCountWithSupport');
   for (let item in itemCount) {
-    if (itemCount[item] / baskets.length < config.SUPPORT) {
+    if (itemCount[item] / transactions.length < config.SUPPORT) {
       delete itemCount[item];
     }
   }

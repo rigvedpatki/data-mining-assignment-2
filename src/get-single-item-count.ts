@@ -1,11 +1,11 @@
-import { Basket, ItemCount } from './types';
+import { Transaction, ItemCount } from './types';
 
-const getSingleItemCount = (baskets: Basket[]): ItemCount => {
+const getSingleItemCount = (transactions: Transaction[]): ItemCount => {
   console.time('getSingleItemCount');
   const singleItemCount: ItemCount = {};
 
-  for (let basket of baskets) {
-    for (let item of basket.items) {
+  for (let transaction of transactions) {
+    for (let item of transaction.items) {
       if (item in singleItemCount) {
         singleItemCount[item] = singleItemCount[item] + 1;
       } else {

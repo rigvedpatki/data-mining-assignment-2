@@ -2,7 +2,7 @@ export interface ItemCount {
   [itemName: string]: number;
 }
 
-export interface Basket {
-  basket: number;
+export interface Transaction {
+  transactionId: number;
   items: number[];
 }
